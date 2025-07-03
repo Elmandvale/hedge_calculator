@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Elm & Vale Hedge Cutting Estimator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Lato&family=Marcellus&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #1F3B27;
+      --background: #1F3B27;
+      --field-bg: #F4EFE0;
+      --field-border: #F0E9D5;
+      --text-color: #F0E9D5;
+      --button-bg: #F4EFE0;
+      --button-text: #1F3B27;
+    }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      margin: 0;
+      padding: 2rem 1rem;
+      background: transparent;
+      color: var(--text-color);
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--background);
+      border: 2pt solid var(--field-border);
+      border-radius: 12px;
+      padding: 2rem;
+    }
+
+    h2 {
+      margin: 1.8rem 0 0.25rem;
+      color: var(--text-color);
+      font-family: 'Marcellus', serif;
+    }
+
+    p {
+      color: var(--text-color);
+    }
+
+    select {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0.9rem;
+      border-radius: 999px;
+      border: 2pt solid var(--field-border);
+      background-color: var(--field-bg);
+      color: var(--primary-color);
+    }
+
+    button {
+      width: 30%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 999px;
+      border: none;
+      background: var(--button-bg);
+      color: var(--button-text);
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .result {
+      font-family: 'Marcellus', serif;
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: var(--text-color);
+      text-align: center;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <p style="font-size: 1.1rem; margin-top: 0.5rem;">
+        Use our quick hedge cutting calculator to get an instant estimate based on hedge size, height, access, and whether you want us to remove clippings.
+      </p>
+      <p style="font-size: 0.95rem; font-style: italic;">
+        We inspect and document all hedges during the nesting season prior to work commencing to ensure there are no active bird nests. If any are found we'll reschedule accordingly.
+      </p>
+
+      <h2>1. Hedge Length</h2>
+      <select id="hedgeLength">
+        <option value="up_to_5">Up to 5 metres</option>
+        <option value="5_10">5–10 metres</option>
+        <option value="10_20">10–20 metres</option>
+        <option value="over_20">Over 20 metres (custom quote)</option>
+      </select>
+
+      <h2>2. Hedge Height</h2>
+      <select id="hedgeHeight">
+        <option value="low">Under 1.5m</option>
+        <option value="mid">1.5m to 2.5m</option>
+        <option value="tall">Over 2.5m</option>
+      </select>
+
+      <h2>3. Access</h2>
+      <select id="access">
+        <option value="easy">Easy Access</option>
+        <option value="difficult">Difficult Access</option>
+      </select>
+
+      <h2>4. Waste Removal</h2>
+      <select id="wasteRemoval">
+        <option value="no">No – I’ll dispose of it</option>
+        <option value="yes">Yes – Please remove trimmings</option>
+      </select>
+
+      <h2>5. Frequency</h2>
+      <select id="frequency">
+        <option value="one_off">One-off</option>
+        <option value="biannual">Biannually (typically spring & autumn)</option>
+        <option value="heavy_cut">Heavy Cut (50%+ hedge volume reduction)</option>
+      </select>
+
+      
+
+      <div id="monthlyOption" style="margin-top: 1rem; font-size: 0.95rem; display: none;">
+        <label>
+          <input type="checkbox" id="monthlyPlan">
+          I'd like to spread the cost over 12 monthly payments (available for annual/biannual plans only).
+        </label>
+      </div>
+
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <button onclick="calculateHedgePrice()">Get My Price</button>
+      </div>
+      <p id="hedgePriceOutput" class="result"></p>
+      <p style="text-align: center; font-size: 0.9rem; font-style: italic; color: var(--text-color);">*Subject to in-person survey</p>
+      <div style="text-align: right; margin-top: 1rem;">
+        <img src="./2nd%20Pass%20Logo.png" alt="Elm & Vale Logo" style="height: 50px; opacity: 0.8;">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function calculateHedgePrice() {
+      const length = document.getElementById('hedgeLength').value;
+      const height = document.getElementById('hedgeHeight').value;
+      const access = document.getElementById('access').value;
+      const removal = document.getElementById('wasteRemoval').value;
+      const frequency = document.getElementById('frequency').value;
+
+      if (length === 'over_20') {
+        document.getElementById('hedgePriceOutput').textContent = "Custom quote required due to hedge size.";
+        return;
+      }
+
+      let basePrice = 0;
+      if (length === 'up_to_5') basePrice = 60;
+      if (length === '5_10') basePrice = 90;
+      if (length === '10_20') basePrice = 120;
+
+      if (height === 'mid') basePrice *= 1.25;
+      if (height === 'tall') basePrice *= 1.5;
+      if (access === 'difficult') basePrice *= 1.1;
+
+      if (removal === 'yes') {
+        let wasteCost = 0;
+        if (length === 'up_to_5') wasteCost = 15;
+        if (length === '5_10') wasteCost = 25;
+        if (length === '10_20') wasteCost = 40;
+
+        if (height === 'mid') wasteCost *= 1.25;
+        if (height === 'tall') wasteCost *= 1.5;
+
+        basePrice += wasteCost;
+      }
+
+      if (frequency === 'biannual') basePrice *= 0.90;
+      if (frequency === 'heavy_cut') basePrice *= 1.35;
+
+      basePrice = Math.round(basePrice);
+      basePrice = Math.round(basePrice * 1.1);
+      let output = `Your price is £${basePrice}*`;
+      const monthly = document.getElementById('monthlyPlan');
+      if ((frequency === 'biannual') && monthly?.checked) {
+        const monthlyPrice = (basePrice / 12).toFixed(2);
+        output += ` or £${monthlyPrice}/month for 12 months`;
+      }
+      document.getElementById('hedgePriceOutput').textContent = output;
+    }
+  document.getElementById('frequency').addEventListener('change', function () {
+  const freq = this.value;
+    const monthlyBox = document.getElementById('monthlyOption');
+  const now = new Date();
+  const isNestingSeason = now.getMonth() >= 2 && now.getMonth() <= 7; // March–August
+
+  
+  // Show monthly plan only for annual or biannual options
+  if (freq === 'biannual') {
+    monthlyBox.style.display = 'block';
+  } else {
+    monthlyBox.style.display = 'none';
+  }
+});
+</script>
+  
+</body>
+</html>
