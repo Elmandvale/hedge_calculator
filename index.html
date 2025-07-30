@@ -16,7 +16,6 @@
       --button-bg: #F4EFE0;
       --button-text: #1F3B27;
     }
-
     body {
       font-family: 'Lato', sans-serif;
       margin: 0;
@@ -24,27 +23,25 @@
       background: transparent;
       color: var(--text-color);
     }
-
     .container {
       max-width: 600px;
       margin: 0 auto;
     }
-
     .card {
       background: var(--background);
       border: none;
       border-radius: 12px;
       padding: 2rem;
     }
-
     h2 {
       margin: 0.9rem 0 0.25rem;
       color: var(--text-color);
       font-family: 'Marcellus', serif;
     }
-
     select, input[type="number"] {
+      display: block;
       width: 100%;
+      box-sizing: border-box;
       padding: 0.75rem;
       font-size: 1rem;
       margin-top: 0.25rem;
@@ -54,7 +51,6 @@
       background-color: var(--field-bg);
       color: var(--primary-color);
     }
-
     button {
       width: 45%;
       padding: 0.75rem;
@@ -68,7 +64,6 @@
       transition: background 0.3s;
       margin: 0.5rem;
     }
-
     .result {
       font-family: 'Marcellus', serif;
       font-weight: bold;
@@ -77,7 +72,6 @@
       text-align: center;
       margin-top: 1rem;
     }
-
     .testimonial {
       background: var(--field-bg);
       color: var(--primary-color);
@@ -86,7 +80,6 @@
       margin-bottom: 1rem;
       font-style: italic;
     }
-
     .testimonial span {
       display: block;
       font-weight: bold;
@@ -125,7 +118,7 @@
       <select id="frequency">
         <option value="One-off">One-off</option>
         <option value="Biannually (spring & autumn)">Biannually (spring & autumn)</option>
-        <option value="Heavy Cut">Heavy Cut (50%+ volume reduction)</option>
+        <option value="Heavy Cut">Heavy Cut</option>
       </select>
 
       <div id="monthlyOption" style="margin-top: 1rem; font-size: 0.95rem; display: none;">
@@ -196,14 +189,14 @@ function calculateHedgePrice() {
     basePrice += wasteCost;
   }
 
-  if (frequency.includes('Biannually')) basePrice *= 0.90;
+  if (frequency === 'Biannually (spring & autumn)') basePrice *= 0.90;
   if (frequency === 'Heavy Cut') basePrice *= 1.35;
 
   basePrice = Math.round(basePrice * 1.1);
   if (basePrice < 130) basePrice = 130;
 
   let output = `Your price is £${basePrice}*`;
-  if (frequency.includes('Biannually') && monthly.includes('Yes')) {
+  if (frequency === 'Biannually (spring & autumn)' && monthly.includes('Yes')) {
     output += ` or £${(basePrice / 12).toFixed(2)}/month for 12 months`;
   }
 
@@ -220,7 +213,7 @@ function calculateHedgePrice() {
 }
 
 document.getElementById('frequency').addEventListener('change', function () {
-  document.getElementById('monthlyOption').style.display = this.value.includes('Biannually') ? 'block' : 'none';
+  document.getElementById('monthlyOption').style.display = this.value === 'Biannually (spring & autumn)' ? 'block' : 'none';
 });
 
 const now = new Date();
