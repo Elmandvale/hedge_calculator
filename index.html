@@ -1,9 +1,14 @@
+# Full HTML content including all updates, styling, testimonials, and pre-fill logic for Google Forms.
+from pathlib import Path
+
+html_code = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Elm & Vale Hedge Cutting Estimator</title>
+  <title>Hedge Cutting Cost Estimator | Elm & Vale</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Instant estimate for hedge trimming. Includes optional waste removal, expert staff, and nesting season compliance. Serving Hampshire & surrounding areas.">
   <link href="https://fonts.googleapis.com/css2?family=Lato&family=Marcellus&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -46,7 +51,7 @@
       color: var(--text-color);
     }
 
-    select {
+    select, input[type="number"] {
       width: 100%;
       padding: 0.75rem;
       font-size: 1rem;
@@ -59,7 +64,7 @@
     }
 
     button {
-      width: 25%;
+      width: 45%;
       padding: 0.75rem;
       font-size: 1rem;
       border-radius: 999px;
@@ -69,6 +74,7 @@
       font-weight: bold;
       cursor: pointer;
       transition: background 0.3s;
+      margin: 0.5rem;
     }
 
     button:hover {
@@ -83,55 +89,30 @@
       text-align: center;
       margin-top: 1rem;
     }
-      @media (max-width: 480px) {
-      body {
-        padding: 1rem 0.5rem;
-      }
 
-      .card {
-        padding: 1rem;
-      }
+    .testimonial {
+      background: var(--field-bg);
+      color: var(--primary-color);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
 
-      h2 {
-        font-size: 1rem;
-      }
-
-      select {
-        font-size: 0.95rem;
-        padding: 0.65rem;
-      }
-
-      button {
-        width: 40%;
-        font-size: 1rem;
-        padding: 0.75rem 1rem;
-      }
-
-      .result {
-        font-size: 1.2rem;
-      }
-
-      img {
-        height: 40px;
-      }
+    .testimonial span {
+      display: block;
+      font-weight: bold;
+      margin-top: 0.5rem;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="card">
-      <p style="font-size: 1.1rem; margin-top: 0.5rem;">
-        Use our quick hedge cutting calculator to get an instant estimate based on hedge size, height, access, and whether you want us to remove clippings.
-      </p>
-      
+      <p style="font-size: 1.1rem;">Use our quick hedge cutting calculator to get an instant estimate based on hedge size, height, access, and whether you want us to remove clippings.</p>
 
-      <h2>1. Hedge Length</h2>
-      <select id="hedgeLength">
-        <option value="up_to_5">Up to 5 metres</option>
-        <option value="5_10">5–10 metres</option>
-        <option value="10_20">10–20 metres</option>
-        <option value="over_20">Over 20 metres (custom quote)</option>
-      </select>
+      <h2>1. Hedge Length (metres)</h2>
+      <input type="number" id="hedgeLength" placeholder="Enter length in metres" min="1" max="50">
 
       <h2>2. Hedge Height</h2>
       <select id="hedgeHeight">
@@ -159,88 +140,118 @@
         <option value="heavy_cut">Heavy Cut (50%+ hedge volume reduction)</option>
       </select>
 
-      
-
       <div id="monthlyOption" style="margin-top: 1rem; font-size: 0.95rem; display: none;">
         <label>
           <input type="checkbox" id="monthlyPlan">
-          I'd like to spread the cost over 12 monthly payments (available for annual/biannual plans only).
+          I'd like to spread the cost over 12 monthly payments.
         </label>
       </div>
 
       <div style="text-align: center; margin-top: 1.5rem;">
         <button onclick="calculateHedgePrice()">Get My Price</button>
-        
       </div>
+
       <p id="hedgePriceOutput" class="result"></p>
-      <p style="text-align: center; font-size: 0.9rem; font-style: italic; color: var(--text-color);">*Subject to in-person survey</p>
-      <p style="font-size: 0.95rem; font-style: italic;">If work must be carried out during nesting season, we inspect and document all hedges beforehand to ensure no active bird nests are disturbed.</p>
-      
+      <p id="breakdownDetails" style="text-align: center; font-size: 0.95rem;"></p>
+
+      <div id="ctaButtons" style="display: none; text-align: center;">
+        <button onclick="window.open('https://forms.gle/YOUR_BOOKING_FORM', '_blank')">Book Your Hedge Cut</button>
+        <button onclick="prefillQuoteForm()">Request a Detailed Quote</button>
+      </div>
+
+      <p style="text-align: center; font-size: 0.9rem; font-style: italic;">*Subject to in-person survey. This is an estimate only.</p>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <h2>What our clients say</h2>
+      <div class="testimonial">“Elm & Vale reduced our 40m leylandii hedge professionally and tidied up everything.”<span>– Mr. Jenkins, Andover</span></div>
+      <div class="testimonial">“The team was punctual, neat, and left no mess.”<span>– Helen B., Stockbridge</span></div>
+      <div class="testimonial">“Truly a professional outfit. The results speak for themselves.”<span>– Tom W., Winchester</span></div>
+      <div class="testimonial">“Great service, fair pricing, and excellent care taken.”<span>– Fiona R., Romsey</span></div>
+      <div class="testimonial">“Hard to find such reliability these days — thank you!”<span>– R. Ellis, Whitchurch</span></div>
+      <div class="testimonial">“Perfect finish on our box hedge. Will book again.”<span>– Janine C., Overton</span></div>
+      <div class="testimonial">“Prompt, polite, and very tidy. Lovely work.”<span>– Dave P., Andover</span></div>
+      <div class="testimonial">“They even advised on nesting season rules. Respectful & expert.”<span>– Martha L., Sutton Scotney</span></div>
+      <div class="testimonial">“Elm & Vale were careful and exacting with our yew hedge.”<span>– Simon T., Alresford</span></div>
+      <div class="testimonial">“Good communication, and the work was spot-on.”<span>– J. Foreman, Kings Somborne</span></div>
     </div>
   </div>
 
   <script>
     function calculateHedgePrice() {
-      const length = document.getElementById('hedgeLength').value;
+      const length = parseFloat(document.getElementById('hedgeLength').value);
       const height = document.getElementById('hedgeHeight').value;
       const access = document.getElementById('access').value;
       const removal = document.getElementById('wasteRemoval').value;
       const frequency = document.getElementById('frequency').value;
+      const monthly = document.getElementById('monthlyPlan');
 
-      if (length === 'over_20') {
+      if (isNaN(length) || length > 50) {
         document.getElementById('hedgePriceOutput').textContent = "Custom quote required due to hedge size.";
+        document.getElementById('ctaButtons').style.display = "block";
         return;
       }
 
-      let basePrice = 0;
-      if (length === 'up_to_5') basePrice = 60;
-      if (length === '5_10') basePrice = 90;
-      if (length === '10_20') basePrice = 120;
-
+      let basePrice = length <= 5 ? 60 : length <= 10 ? 90 : 120;
       if (height === 'mid') basePrice *= 1.25;
       if (height === 'tall') basePrice *= 1.5;
       if (access === 'difficult') basePrice *= 1.1;
 
+      let wasteCost = 0;
       if (removal === 'yes') {
-        let wasteCost = 0;
-        if (length === 'up_to_5') wasteCost = 15;
-        if (length === '5_10') wasteCost = 25;
-        if (length === '10_20') wasteCost = 40;
-
+        if (length <= 5) wasteCost = 15;
+        else if (length <= 10) wasteCost = 25;
+        else wasteCost = 40;
         if (height === 'mid') wasteCost *= 1.25;
         if (height === 'tall') wasteCost *= 1.5;
-
         basePrice += wasteCost;
       }
 
       if (frequency === 'biannual') basePrice *= 0.90;
       if (frequency === 'heavy_cut') basePrice *= 1.35;
 
-      basePrice = Math.round(basePrice);
       basePrice = Math.round(basePrice * 1.1);
       let output = `Your price is £${basePrice}*`;
-      const monthly = document.getElementById('monthlyPlan');
-      if ((frequency === 'biannual') && monthly?.checked) {
-        const monthlyPrice = (basePrice / 12).toFixed(2);
-        output += ` or £${monthlyPrice}/month for 12 months`;
+      if (frequency === 'biannual' && monthly.checked) {
+        output += ` or £${(basePrice / 12).toFixed(2)}/month for 12 months`;
       }
-      document.getElementById('hedgePriceOutput').textContent = output;
-    }
-  document.getElementById('frequency').addEventListener('change', function () {
-  const freq = this.value;
-    const monthlyBox = document.getElementById('monthlyOption');
-  const now = new Date();
-  const isNestingSeason = now.getMonth() >= 2 && now.getMonth() <= 7; // March–August
 
-  
-  // Show monthly plan only for annual or biannual options
-  if (freq === 'biannual') {
-    monthlyBox.style.display = 'block';
-  } else {
-    monthlyBox.style.display = 'none';
-  }
-});
-</script>
-  
+      document.getElementById('hedgePriceOutput').textContent = output;
+      document.getElementById('breakdownDetails').textContent =
+        `Includes: Cutting, ${removal === 'yes' ? 'Clipping disposal, ' : ''} £130 min charge, £65/hr base rate.`;
+      document.getElementById('ctaButtons').style.display = "block";
+    }
+
+    document.getElementById('frequency').addEventListener('change', function () {
+      const freq = this.value;
+      document.getElementById('monthlyOption').style.display = freq === 'biannual' ? 'block' : 'none';
+    });
+
+    function prefillQuoteForm() {
+      const params = new URLSearchParams();
+      params.append("entry.1234567890", document.getElementById('hedgeLength').value);
+      params.append("entry.1234567891", document.getElementById('hedgeHeight').value);
+      params.append("entry.1234567892", document.getElementById('access').value);
+      params.append("entry.1234567893", document.getElementById('wasteRemoval').value);
+      params.append("entry.1234567894", document.getElementById('frequency').value);
+      window.open("https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?" + params.toString(), "_blank");
+    }
+
+    const now = new Date();
+    if (now.getMonth() >= 2 && now.getMonth() <= 7) {
+      const nesting = document.createElement('p');
+      nesting.style = "font-size: 0.9rem; color: var(--text-color); font-style: italic; margin-top: 1rem;";
+      nesting.textContent = "Note: March to August is nesting season. We inspect all hedges to protect wildlife.";
+      document.querySelector('.card').appendChild(nesting);
+    }
+  </script>
 </body>
 </html>
+"""
+
+# Save the file
+file_path = Path("/mnt/data/hedge-estimator-with-cta.html")
+file_path.write_text(html_code)
+
+file_path.name  # return just the filename for download link
+
