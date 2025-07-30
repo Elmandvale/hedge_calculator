@@ -196,6 +196,7 @@ function calculateHedgePrice() {
   if (frequency.includes('Heavy Cut')) basePrice *= 1.35;
 
   basePrice = Math.round(basePrice * 1.1);
+  if (basePrice < 130) basePrice = 130;
   let output = `Your price is £${basePrice}*`;
   if (frequency.includes('Biannually') && monthly.includes('Yes')) {
     output += ` or £${(basePrice / 12).toFixed(2)}/month for 12 months`;
