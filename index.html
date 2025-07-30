@@ -104,28 +104,28 @@
 
       <h2>2. Hedge Height</h2>
       <select id="hedgeHeight">
-        <option value="low">Under 1.5m</option>
-        <option value="mid">1.5m to 2.5m</option>
-        <option value="tall">Over 2.5m</option>
+        <option value="Under 1.5m">Under 1.5m</option>
+        <option value="1.5m to 2.5m">1.5m to 2.5m</option>
+        <option value="Over 2.5m">Over 2.5m</option>
       </select>
 
       <h2>3. Access</h2>
       <select id="access">
-        <option value="easy">Easy Access</option>
-        <option value="difficult">Difficult Access</option>
+        <option value="Easy access (gate or driveway)">Easy Access</option>
+        <option value="Difficult access">Difficult Access</option>
       </select>
 
       <h2>4. Waste Removal</h2>
       <select id="wasteRemoval">
-        <option value="no">No – I’ll dispose of it</option>
-        <option value="yes">Yes – Please remove trimmings</option>
+        <option value="No – I’ll dispose of it">No – I’ll dispose of it</option>
+        <option value="Yes – Please remove clippings">Yes – Please remove clippings</option>
       </select>
 
       <h2>5. Frequency</h2>
       <select id="frequency">
-        <option value="one_off">One-off</option>
-        <option value="biannual">Biannually (spring & autumn)</option>
-        <option value="heavy_cut">Heavy Cut (50%+ volume reduction)</option>
+        <option value="One-off">One-off</option>
+        <option value="Biannually (spring & autumn)">Biannually (spring & autumn)</option>
+        <option value="Heavy Cut (50%+ volume reduction)">Heavy Cut</option>
       </select>
 
       <div id="monthlyOption" style="margin-top: 1rem; font-size: 0.95rem; display: none;">
@@ -169,7 +169,7 @@ function calculateHedgePrice() {
   const access = document.getElementById('access').value;
   const removal = document.getElementById('wasteRemoval').value;
   const frequency = document.getElementById('frequency').value;
-  const monthly = document.getElementById('monthlyPlan').checked ? "Yes" : "No";
+  const monthly = document.getElementById('monthlyPlan').checked ? "Yes – I want to spread the cost over 12 payments" : "No";
 
   if (isNaN(length) || length > 50) {
     document.getElementById('hedgePriceOutput').textContent = "Custom quote required due to hedge size.";
@@ -178,42 +178,42 @@ function calculateHedgePrice() {
   }
 
   let basePrice = length <= 5 ? 60 : length <= 10 ? 90 : 120;
-  if (height === 'mid') basePrice *= 1.25;
-  if (height === 'tall') basePrice *= 1.5;
-  if (access === 'difficult') basePrice *= 1.1;
+  if (height === '1.5m to 2.5m') basePrice *= 1.25;
+  if (height === 'Over 2.5m') basePrice *= 1.5;
+  if (access === 'Difficult access') basePrice *= 1.1;
 
   let wasteCost = 0;
-  if (removal === 'yes') {
+  if (removal.includes('Yes')) {
     if (length <= 5) wasteCost = 15;
     else if (length <= 10) wasteCost = 25;
     else wasteCost = 40;
-    if (height === 'mid') wasteCost *= 1.25;
-    if (height === 'tall') wasteCost *= 1.5;
+    if (height === '1.5m to 2.5m') wasteCost *= 1.25;
+    if (height === 'Over 2.5m') wasteCost *= 1.5;
     basePrice += wasteCost;
   }
 
-  if (frequency === 'biannual') basePrice *= 0.90;
-  if (frequency === 'heavy_cut') basePrice *= 1.35;
+  if (frequency.includes('Biannually')) basePrice *= 0.90;
+  if (frequency.includes('Heavy Cut')) basePrice *= 1.35;
 
   basePrice = Math.round(basePrice * 1.1);
   let output = `Your price is £${basePrice}*`;
-  if (frequency === 'biannual' && monthly === "Yes") {
+  if (frequency.includes('Biannually') && monthly.includes('Yes')) {
     output += ` or £${(basePrice / 12).toFixed(2)}/month for 12 months`;
   }
 
   document.getElementById('hedgePriceOutput').textContent = output;
   document.getElementById('breakdownDetails').textContent =
-    `Includes: Cutting, ${removal === 'yes' ? 'Clipping disposal, ' : ''} £130 min charge, £65/hr base rate.`;
+    `Includes: Cutting, ${removal.includes('Yes') ? 'Clipping disposal, ' : ''} £130 min charge, £65/hr base rate.`;
 
   document.getElementById('ctaButtons').innerHTML = `
-    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdUpnSR5CqBRcblfVwWcObhbWj1q7TKwGzalCMxB0qpaeRIvQ/viewform?usp=pp_url&entry.493287487=${length}&entry.1342200404=${height}&entry.1727123452=${access}&entry.1245043806=${removal}&entry.1654431404=${frequency}&entry.1492670999=${monthly}', '_blank')">Book Your Hedge Cut</button>
-    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfFKmSDBEoIi774TATYEpKVnXk0U_KFrtFq0qVVfWKi7nAuJg/viewform?usp=pp_url&entry.1976922607=${length}&entry.1563146849=${height}&entry.1992577782=${access}&entry.1379168856=${removal}&entry.1264654429=${frequency}', '_blank')">Request a Detailed Quote</button>
+    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdUpnSR5CqBRcblfVwWcObhbWj1q7TKwGzalCMxB0qpaeRIvQ/viewform?usp=pp_url&entry.724828978=${length}&entry.995402589=${height}&entry.213083326=${access}&entry.1218789557=${removal}&entry.2103018829=${frequency}&entry.1298935161=${monthly}', '_blank')">Book Your Hedge Cut</button>
+    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfFKmSDBEoIi774TATYEpKVnXk0U_KFrtFq0qVVfWKi7nAuJg/viewform?usp=pp_url&entry.702458335=${length}&entry.1860347627=${height}&entry.204469283=${access}&entry.1491937533=${removal}&entry.1832713518=${frequency}&entry.1925450448=${monthly}', '_blank')">Request a Detailed Quote</button>
   `;
   document.getElementById('ctaButtons').style.display = "block";
 }
 
 document.getElementById('frequency').addEventListener('change', function () {
-  document.getElementById('monthlyOption').style.display = this.value === 'biannual' ? 'block' : 'none';
+  document.getElementById('monthlyOption').style.display = this.value.includes('Biannually') ? 'block' : 'none';
 });
 
 const now = new Date();
