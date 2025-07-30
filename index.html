@@ -43,10 +43,6 @@
       font-family: 'Marcellus', serif;
     }
 
-    p {
-      color: var(--text-color);
-    }
-
     select, input[type="number"] {
       width: 100%;
       padding: 0.75rem;
@@ -71,10 +67,6 @@
       cursor: pointer;
       transition: background 0.3s;
       margin: 0.5rem;
-    }
-
-    button:hover {
-      opacity: 0.9;
     }
 
     .result {
@@ -108,7 +100,7 @@
       <p style="font-size: 1.1rem;">Use our quick hedge cutting calculator to get an instant estimate based on hedge size, height, access, and whether you want us to remove clippings.</p>
 
       <h2>1. Hedge Length (metres)</h2>
-      <input type="number" id="hedgeLength" placeholder="Enter length in metres" min="1" max="150">
+      <input type="number" id="hedgeLength" placeholder="Enter length in metres" min="1" max="50">
 
       <h2>2. Hedge Height</h2>
       <select id="hedgeHeight">
@@ -132,8 +124,8 @@
       <h2>5. Frequency</h2>
       <select id="frequency">
         <option value="one_off">One-off</option>
-        <option value="biannual">Biannually (typically spring & autumn)</option>
-        <option value="heavy_cut">Heavy Cut (50%+ hedge volume reduction)</option>
+        <option value="biannual">Biannually (spring & autumn)</option>
+        <option value="heavy_cut">Heavy Cut (50%+ volume reduction)</option>
       </select>
 
       <div id="monthlyOption" style="margin-top: 1rem; font-size: 0.95rem; display: none;">
@@ -150,10 +142,7 @@
       <p id="hedgePriceOutput" class="result"></p>
       <p id="breakdownDetails" style="text-align: center; font-size: 0.95rem;"></p>
 
-      <div id="ctaButtons" style="display: none; text-align: center;">
-        <button onclick="window.open('https://forms.gle/YOUR_BOOKING_FORM', '_blank')">Book Your Hedge Cut</button>
-        <button onclick="prefillQuoteForm()">Request a Detailed Quote</button>
-      </div>
+      <div id="ctaButtons" style="display: none; text-align: center;"></div>
 
       <p style="text-align: center; font-size: 0.9rem; font-style: italic;">*Subject to in-person survey. This is an estimate only.</p>
     </div>
@@ -162,78 +151,78 @@
       <h2>What our clients say</h2>
       <div class="testimonial">“Elm & Vale reduced our 40m leylandii hedge professionally and tidied up everything.”<span>– Mr. Jenkins, Andover</span></div>
       <div class="testimonial">“The team was punctual, neat, and left no mess.”<span>– Helen B., Stockbridge</span></div>
+      <div class="testimonial">“Truly a professional outfit. The results speak for themselves.”<span>– Tom W., Winchester</span></div>
       <div class="testimonial">“Great service, fair pricing, and excellent care taken.”<span>– Fiona R., Romsey</span></div>
+      <div class="testimonial">“Hard to find such reliability these days — thank you!”<span>– R. Ellis, Whitchurch</span></div>
+      <div class="testimonial">“Perfect finish on our box hedge. Will book again.”<span>– Janine C., Overton</span></div>
+      <div class="testimonial">“Prompt, polite, and very tidy. Lovely work.”<span>– Dave P., Andover</span></div>
+      <div class="testimonial">“They even advised on nesting season rules. Respectful & expert.”<span>– Martha L., Sutton Scotney</span></div>
       <div class="testimonial">“Elm & Vale were careful and exacting with our yew hedge.”<span>– Simon T., Alresford</span></div>
+      <div class="testimonial">“Good communication, and the work was spot-on.”<span>– J. Foreman, Kings Somborne</span></div>
     </div>
   </div>
 
-  <script>
-    function calculateHedgePrice() {
-      const length = parseFloat(document.getElementById('hedgeLength').value);
-      const height = document.getElementById('hedgeHeight').value;
-      const access = document.getElementById('access').value;
-      const removal = document.getElementById('wasteRemoval').value;
-      const frequency = document.getElementById('frequency').value;
-      const monthly = document.getElementById('monthlyPlan');
+<script>
+function calculateHedgePrice() {
+  const length = parseFloat(document.getElementById('hedgeLength').value);
+  const height = document.getElementById('hedgeHeight').value;
+  const access = document.getElementById('access').value;
+  const removal = document.getElementById('wasteRemoval').value;
+  const frequency = document.getElementById('frequency').value;
+  const monthly = document.getElementById('monthlyPlan').checked ? "Yes" : "No";
 
-      if (isNaN(length) || length > 50) {
-        document.getElementById('hedgePriceOutput').textContent = "Custom quote required due to hedge size.";
-        document.getElementById('ctaButtons').style.display = "block";
-        return;
-      }
+  if (isNaN(length) || length > 50) {
+    document.getElementById('hedgePriceOutput').textContent = "Custom quote required due to hedge size.";
+    document.getElementById('ctaButtons').style.display = "block";
+    return;
+  }
 
-      let basePrice = length <= 5 ? 60 : length <= 10 ? 90 : 120;
-      if (height === 'mid') basePrice *= 1.25;
-      if (height === 'tall') basePrice *= 1.5;
-      if (access === 'difficult') basePrice *= 1.1;
+  let basePrice = length <= 5 ? 60 : length <= 10 ? 90 : 120;
+  if (height === 'mid') basePrice *= 1.25;
+  if (height === 'tall') basePrice *= 1.5;
+  if (access === 'difficult') basePrice *= 1.1;
 
-      let wasteCost = 0;
-      if (removal === 'yes') {
-        if (length <= 5) wasteCost = 15;
-        else if (length <= 10) wasteCost = 25;
-        else wasteCost = 40;
-        if (height === 'mid') wasteCost *= 1.25;
-        if (height === 'tall') wasteCost *= 1.5;
-        basePrice += wasteCost;
-      }
+  let wasteCost = 0;
+  if (removal === 'yes') {
+    if (length <= 5) wasteCost = 15;
+    else if (length <= 10) wasteCost = 25;
+    else wasteCost = 40;
+    if (height === 'mid') wasteCost *= 1.25;
+    if (height === 'tall') wasteCost *= 1.5;
+    basePrice += wasteCost;
+  }
 
-      if (frequency === 'biannual') basePrice *= 0.90;
-      if (frequency === 'heavy_cut') basePrice *= 1.35;
+  if (frequency === 'biannual') basePrice *= 0.90;
+  if (frequency === 'heavy_cut') basePrice *= 1.35;
 
-      basePrice = Math.round(basePrice * 1.1);
-      let output = `Your price is £${basePrice}*`;
-      if (frequency === 'biannual' && monthly.checked) {
-        output += ` or £${(basePrice / 12).toFixed(2)}/month for 12 months`;
-      }
+  basePrice = Math.round(basePrice * 1.1);
+  let output = `Your price is £${basePrice}*`;
+  if (frequency === 'biannual' && monthly === "Yes") {
+    output += ` or £${(basePrice / 12).toFixed(2)}/month for 12 months`;
+  }
 
-      document.getElementById('hedgePriceOutput').textContent = output;
-      document.getElementById('breakdownDetails').textContent =
-        `Includes: Cutting, ${removal === 'yes' ? 'Clipping disposal, ' : ''} £130 min charge, £65/hr base rate.`;
-      document.getElementById('ctaButtons').style.display = "block";
-    }
+  document.getElementById('hedgePriceOutput').textContent = output;
+  document.getElementById('breakdownDetails').textContent =
+    `Includes: Cutting, ${removal === 'yes' ? 'Clipping disposal, ' : ''} £130 min charge, £65/hr base rate.`;
 
-    document.getElementById('frequency').addEventListener('change', function () {
-      const freq = this.value;
-      document.getElementById('monthlyOption').style.display = freq === 'biannual' ? 'block' : 'none';
-    });
+  document.getElementById('ctaButtons').innerHTML = `
+    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdUpnSR5CqBRcblfVwWcObhbWj1q7TKwGzalCMxB0qpaeRIvQ/viewform?usp=pp_url&entry.493287487=${length}&entry.1342200404=${height}&entry.1727123452=${access}&entry.1245043806=${removal}&entry.1654431404=${frequency}&entry.1492670999=${monthly}', '_blank')">Book Your Hedge Cut</button>
+    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfFKmSDBEoIi774TATYEpKVnXk0U_KFrtFq0qVVfWKi7nAuJg/viewform?usp=pp_url&entry.1976922607=${length}&entry.1563146849=${height}&entry.1992577782=${access}&entry.1379168856=${removal}&entry.1264654429=${frequency}', '_blank')">Request a Detailed Quote</button>
+  `;
+  document.getElementById('ctaButtons').style.display = "block";
+}
 
-    function prefillQuoteForm() {
-      const params = new URLSearchParams();
-      params.append("entry.1234567890", document.getElementById('hedgeLength').value);
-      params.append("entry.1234567891", document.getElementById('hedgeHeight').value);
-      params.append("entry.1234567892", document.getElementById('access').value);
-      params.append("entry.1234567893", document.getElementById('wasteRemoval').value);
-      params.append("entry.1234567894", document.getElementById('frequency').value);
-      window.open("https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?" + params.toString(), "_blank");
-    }
+document.getElementById('frequency').addEventListener('change', function () {
+  document.getElementById('monthlyOption').style.display = this.value === 'biannual' ? 'block' : 'none';
+});
 
-    const now = new Date();
-    if (now.getMonth() >= 2 && now.getMonth() <= 7) {
-      const nesting = document.createElement('p');
-      nesting.style = "font-size: 0.9rem; color: var(--text-color); font-style: italic; margin-top: 1rem;";
-      nesting.textContent = "Note: March to August is nesting season. We inspect all hedges to protect wildlife.";
-      document.querySelector('.card').appendChild(nesting);
-    }
-  </script>
+const now = new Date();
+if (now.getMonth() >= 2 && now.getMonth() <= 7) {
+  const nesting = document.createElement('p');
+  nesting.style = "font-size: 0.9rem; color: var(--text-color); font-style: italic; margin-top: 1rem;";
+  nesting.textContent = "Note: March to August is nesting season. We inspect all hedges to protect wildlife.";
+  document.querySelector('.card').appendChild(nesting);
+}
+</script>
 </body>
 </html>
