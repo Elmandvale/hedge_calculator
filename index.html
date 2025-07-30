@@ -163,7 +163,9 @@ function calculateHedgePrice() {
   const access = document.getElementById('access').value;
   const removal = document.getElementById('wasteRemoval').value;
   const frequency = document.getElementById('frequency').value;
-  const monthly = document.getElementById('monthlyPlan').checked ? "Yes – I want to spread the cost over 12 payments" : "No";
+  const monthly = document.getElementById('monthlyPlan').checked
+    ? "Yes – I want to spread the cost over 12 payments"
+    : "No";
 
   if (isNaN(length) || length > 50) {
     document.getElementById('hedgePriceOutput').textContent = "Custom quote required due to hedge size.";
@@ -211,6 +213,7 @@ function calculateHedgePrice() {
 
   document.getElementById('ctaButtons').innerHTML = `
     <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdUpnSR5CqBRcblfVwWcObhbWj1q7TKwGzalCMxB0qpaeRIvQ/viewform?usp=pp_url&entry.724828978=${length}&entry.995402589=${height}&entry.213083326=${access}&entry.1218789557=${removal}&entry.2103018829=${frequency}&entry.1298935161=${monthly}', '_blank')">Book Your Hedge Cut</button>
+
     <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfFKmSDBEoIi774TATYEpKVnXk0U_KFrtFq0qVVfWKi7nAuJg/viewform?usp=pp_url&entry.702458335=${length}&entry.1860347627=${height}&entry.204469283=${access}&entry.1491937533=${removal}&entry.1832713518=${frequency}&entry.1925450448=${monthly}', '_blank')">Request a Detailed Quote</button>
   `;
   document.getElementById('ctaButtons').style.display = "block";
